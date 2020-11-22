@@ -76,7 +76,7 @@ JSON_Beautify(JSON, gap:="`t", maxIndent:= 4) {
 				_s:=""
 				Loop % k
 					_s.=indent
-				_JSON .= A_LoopField (k<=maxIndent?"`n" _s:" ")
+				_JSON .= A_LoopField (k<=maxIndent?"`n" _s:((If l_char is digit || l_char == 0 )? "":" "))
 				continue
 			}
 		}
