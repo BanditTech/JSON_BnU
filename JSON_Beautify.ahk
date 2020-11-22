@@ -63,6 +63,7 @@ JSON_Beautify(JSON, gap:="`t", maxIndent:= 4) {
 				Loop % ++k
 					_s.=indent
 				_JSON .= A_LoopField (k<=maxIndent?"`n" _s:(A_LoopField=="{"?" ":""))
+				l_beforeDigit := l_char
 				l_char := A_LoopField
 				continue
 			}
@@ -71,6 +72,7 @@ JSON_Beautify(JSON, gap:="`t", maxIndent:= 4) {
 				Loop % --k
 					_s.=indent
 				_JSON .= (k<maxIndent?"`n" _s A_LoopField:(A_LoopField=="}"?" ":"") A_LoopField)
+				l_beforeDigit := l_char
 				l_char := A_LoopField
 				continue
 			}
@@ -79,15 +81,24 @@ JSON_Beautify(JSON, gap:="`t", maxIndent:= 4) {
 				Loop % k
 					_s.=indent
 				If l_char is digit
-					_JSON .= A_LoopField (k<=maxIndent?"`n" _s:"")
+				{
+					If (l_beforeDigit != ":")
+						_JSON .= A_LoopField (k<=maxIndent?"`n" _s:"")
+					Else
+						_JSON .= A_LoopField (k<=maxIndent?"`n" _s:" ")
+						
+				}
 				Else
 					_JSON .= A_LoopField (k<=maxIndent?"`n" _s:" ")
+				l_beforeDigit := l_char
 				l_char := A_LoopField
 				continue
 			}
 		}
 		if( (asc(A_LoopField)==0x22) && (asc(l_char)!=0x5C) )
 			in_str := !in_str
+		If l_char is not digit
+			l_beforeDigit := l_char
 		_JSON .= (l_char:=A_LoopField)
 	}
 	StringReplace,_JSON,_JSON, % Chr(1),\\,A  ;convert '\1' back to '\\'
