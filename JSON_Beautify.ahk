@@ -62,7 +62,7 @@ JSON_Beautify(JSON, gap:="`t", maxIndent:= 4) {
 				_s:=""
 				Loop % ++k
 					_s.=indent
-				_JSON .= A_LoopField (k<=maxIndent?"`n" _s:"")
+				_JSON .= A_LoopField (k<=maxIndent?"`n" _s:(A_LoopField=="{"?" ":""))
 				l_char := A_LoopField
 				continue
 			}
@@ -70,7 +70,7 @@ JSON_Beautify(JSON, gap:="`t", maxIndent:= 4) {
 				_s:=""
 				Loop % --k
 					_s.=indent
-				_JSON .= (k<maxIndent?"`n" _s A_LoopField:"" A_LoopField)
+				_JSON .= (k<maxIndent?"`n" _s A_LoopField:(A_LoopField=="}"?" ":"") A_LoopField)
 				l_char := A_LoopField
 				continue
 			}
