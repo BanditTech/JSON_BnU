@@ -35,7 +35,7 @@ JSON_Uglify(JSON) {
 	}
 }
 
-JSON_Beautify(JSON, gap:="`t", maxIndent:= 4) {
+JSON_Beautify(JSON, gap:="`t", maxIndent:=4, boleanVal:=false) {
 	;fork of http://pastebin.com/xB0fG9py
 	JSON:=JSON_Uglify(JSON)
 	StringReplace,JSON,JSON, \\, % Chr(1),A  ;watchout for escape sequence '\\', convert to '\1'
@@ -103,5 +103,8 @@ JSON_Beautify(JSON, gap:="`t", maxIndent:= 4) {
 	}
 	StringReplace,_JSON,_JSON, % Chr(1),\\,A  ;convert '\1' back to '\\'
 	_JSON := RegExReplace(_JSON, "\[[ \n]+\]", "[]")
+	_JSON := RegExReplace(_JSON, "\{[ \n]+\}", "{}")
+	if boleanVal
+		_JSON := RegExReplace(_JSON, """:0([, ])", """:false$1"), _JSON := RegExReplace(_JSON, """:1([, ])", """:true$1")
 	return _JSON
 }
